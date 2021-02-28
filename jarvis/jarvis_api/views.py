@@ -37,35 +37,36 @@ def token(request):
 def handle(request):
     body = json.loads(request.body.decode('utf-8'))
     logger.error(body)
-    interaction_type = body['interactionType']
+    headers = body['headers']
+    interaction_type = headers['interactionType']
     response = {}
     interaction_response = ''
     if 'discoveryRequest' == interaction_type:
-        interaction_response = "discoveryResponse"
+        interaction_response = 'discoveryResponse'
         response['requestGrantCallbackAccess'] = 'true'
         device = {
-            "externalDeviceId": "kitchen-light-0",
-            "deviceCookie": {"updatedcookie": "old or new value"},
-            "friendlyName": "Kitchen Bulb",
-            "manufacturerInfo": {
-                "manufacturerName": "LIFX",
-                "modelName": "A19 Color Bulb"
+            'externalDeviceId': 'kitchen-light-0',
+            'deviceCookie': {'updatedcookie': 'old or new value'},
+            'friendlyName': 'Kitchen Bulb',
+            'manufacturerInfo': {
+                'manufacturerName': 'LIFX',
+                'modelName': 'A19 Color Bulb'
             },
-            "deviceHandlerType": "c2c-rgbw-color-bulb",
-            "deviceUniqueId": "unique identifier of device",
-            "deviceContext": {
-                "roomName": "Kitchen",
-                "groups": ["Kitchen Lights", "House Bulbs"],
-                "categories": ["light", "switch"]
+            'deviceHandlerType': 'c2c-rgbw-color-bulb',
+            'deviceUniqueId': 'unique identifier of device',
+            'deviceContext': {
+                'roomName': 'Kitchen',
+                'groups': ['Kitchen Lights', 'House Bulbs'],
+                'categories': ['light', 'switch']
             }
 
         }
         response['devices'] = [device]
 
     response['headers'] = {
-        "schema", "st-schema",
-        "version", "1.0",
-        "interactionType", interaction_response,
-        "requestId", body['requestId']
+        'schema', 'st-schema',
+        'version', '1.0',
+        'interactionType', interaction_response,
+        'requestId', headers['requestId']
     }
     return JsonResponse(response)
