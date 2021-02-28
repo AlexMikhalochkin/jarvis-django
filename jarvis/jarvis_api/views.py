@@ -1,7 +1,10 @@
+import logging
 import urllib
 
 from django.http import JsonResponse
 from django.shortcuts import redirect
+
+logger = logging.getLogger()
 
 
 def auth(request):
@@ -28,3 +31,7 @@ def token(request):
         'expires_in': '1576799999'
     }
     return JsonResponse(response)
+
+
+def handle(request):
+    logger.info(request)
