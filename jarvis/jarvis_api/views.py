@@ -4,7 +4,7 @@ import urllib
 from django.http import JsonResponse
 from django.shortcuts import redirect
 
-logger = logging.getLogger()
+logger = logging.getLogger('logger')
 
 
 def auth(request):
@@ -34,4 +34,8 @@ def token(request):
 
 
 def handle(request):
-    logger.info(request)
+    logger.error(request.body.decode('utf-8'))
+    response = {
+        'access_token': 'ca3e4771-a0e8-4de3-ba63-a3545d15bfb2',
+    }
+    return JsonResponse(response)
