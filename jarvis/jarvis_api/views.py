@@ -9,7 +9,7 @@ logger = logging.getLogger('logger')
 
 
 def auth(request):
-    state = request.POST.get('state')
+    state = request.GET.get('state')
     response_type = request.GET.get('response_type')
     redirect_uri = request.GET.get('redirect_uri')
     client_id = request.GET.get('client_id')
