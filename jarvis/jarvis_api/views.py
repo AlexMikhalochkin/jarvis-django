@@ -64,9 +64,9 @@ def handle(request):
         response['devices'] = [device]
 
     response['headers'] = {
-        'schema', 'st-schema',
-        'version', '1.0',
-        'interactionType', interaction_response,
-        'requestId', headers['requestId']
+        'schema': 'st-schema',
+        'version': '1.0',
+        'interactionType': interaction_response,
+        'requestId': headers['requestId']
     }
     return JsonResponse(response)
