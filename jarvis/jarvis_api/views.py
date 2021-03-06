@@ -5,6 +5,8 @@ import urllib
 from django.http import JsonResponse
 from django.shortcuts import redirect
 
+from . import mega_d_client
+
 logger = logging.getLogger('logger')
 
 
@@ -63,10 +65,44 @@ def handle(request):
         }
         response['devices'] = [device]
 
+    if 'stateRefreshRequest' == interaction_type:
+        interaction_response = 'stateRefreshResponse'
+        # TODO get real device status
+        is_on = 'on' if mega_d_client.get_port_status(7) else 'off'
+        state = {
+            'component': 'main',
+            'capability': 'st.switch',
+            'attribute': 'switch',
+            'value': is_on
+        }
+        device_state = {
+            'externalDeviceId': 'kitchen-light-0',
+            'states': [state]
+        }
+        response['deviceState'] = [device_state]
+
+    if 'commandRequest' == interaction_type:
+        interaction_response = 'commandResponse'
+        command = body['devices'][0]['commands'][0]['command']
+        is_on = 'on' == command
+        mega_d_client.turn_on(7) if is_on else mega_d_client.turn_off(7)
+        state = {
+            'component': 'main',
+            'capability': 'st.switch',
+            'attribute': 'switch',
+            'value': 'on' if is_on else 'off'
+        }
+        device_state = {
+            'externalDeviceId': 'kitchen-light-0',
+            'states': [state]
+        }
+        response['deviceState'] = [device_state]
+    # Add exception for unknown interaction type
     response['headers'] = {
         'schema': 'st-schema',
         'version': '1.0',
         'interactionType': interaction_response,
         'requestId': headers['requestId']
     }
+    logger.error(response)
     return JsonResponse(response)
