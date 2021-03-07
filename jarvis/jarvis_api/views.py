@@ -61,7 +61,6 @@ def handle(request):
                 'groups': ['Kitchen Lights', 'House Bulbs'],
                 'categories': ['light', 'switch']
             }
-
         }
         response['devices'] = [device]
 
