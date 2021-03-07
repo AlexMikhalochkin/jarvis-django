@@ -1,0 +1,39 @@
+# This workflow will deploy a dockerized django project to the remote server
+# It copies source code and build docker images on the remote server to reduce time for deployment
+
+name: Deploy source code
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Zip source code
+        run: zip -r jarvis.zip jarvis/ nginx/ docker-compose.yaml
+      - name: Deploy the package to the remote server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: jarvis.zip
+          remote: jarvis/jarvis.zip
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+      - name: Run a script on remote server (start the application)
+        if: always()
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd jarvis
+            docker-compose down
+            unzip -o jarvis.zip
+            rm jarvis.zip
+            docker-compose up -d
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          user: ${{ secrets.SSH_USER }}
+          pass: ${{ secrets.SSH_PASSWORD }}
+          args: "-tt"
