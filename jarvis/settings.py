@@ -33,7 +33,8 @@ ALLOWED_HOSTS = str(os.environ.get('ALLOWED_HOSTS')).split(' ')
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages'
+    'django.contrib.messages',
+    'jarvis_api'
 ]
 
 MIDDLEWARE = [
@@ -70,7 +71,11 @@ WSGI_APPLICATION = 'jarvis.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
+        'USER': os.environ.get('POSTGRES_USER', 'user'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
