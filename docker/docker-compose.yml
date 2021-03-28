@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   app:
-    build: ..
+    image: alexmikhalochkin/jarvis:latest
     container_name: django-gunicorn
     restart: always
     env_file:

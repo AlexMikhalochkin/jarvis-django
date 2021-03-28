@@ -1,0 +1,6 @@
+*.md
+venv/
+.github/
+docker/
+*ignore
+Dockerfile
