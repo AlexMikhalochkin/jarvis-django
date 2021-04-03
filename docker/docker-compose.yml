@@ -2,36 +2,18 @@ version: "3.7"
 
 services:
   app:
-    image: alexmikhalochkin/jarvis:latest
+    build: ..
     container_name: django-gunicorn
     restart: always
     env_file:
       - django.env
-    ports:
-      - "8000:8000"
-    command:
-      "gunicorn --workers=2 --bind=0.0.0.0:8000 jarvis.wsgi:application"
 
   db:
     image: postgres:12.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - "5432:5432"
     env_file:
       - django.env
-
-  nginx:
-    image: nginx:1.17
-    container_name: ngx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - /etc/letsencrypt:/etc/letsencrypt
-    depends_on:
-      - app
 
 volumes:
   postgres_data:
